@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini AI言語変換ツール</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #0d1421 0%, #1a237e 50%, #283593 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            background: rgba(66, 133, 244, 0.1);
+            border-radius: 12px;
+            padding: 2rem 1rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 50%, #fbbc04 75%, #ea4335 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+        
+        .main-card {
+            background: rgba(66, 133, 244, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .input-field {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #4285f4;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .preset-btn:hover {
+            background: linear-gradient(135deg, #42a5f5 0%, #66bb6a 100%);
+            border-color: transparent;
+            transform: translateY(-1px);
+        }
+        
+        .convert-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .convert-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.3);
+        }
+        
+        .convert-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-section {
+            background: rgba(66, 133, 244, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #42a5f5 0%, #66bb6a 100%);
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(66, 165, 245, 0.4);
+        }
+        
+        .result-content {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 1rem;
+            color: white;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #4285f4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .result-header {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .copy-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-star"></i> Gemini AI言語変換</h1>
+            <p class="subtitle">テキストを様々なスタイルに自動変換</p>
+        </header>
+
+        <main class="main-card">
+            <form id="convertForm">
+                <div class="form-group">
+                    <label for="contentInput">
+                        <i class="fas fa-edit"></i> 変換したいテキスト
+                    </label>
+                    <textarea 
+                        id="contentInput" 
+                        class="input-field"
+                        placeholder="ここに変換したいテキストを入力してください..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-star"></i> よく使う変換</label>
+                    <div class="preset-buttons">
+                        <button type="button" class="preset-btn" data-method="関西弁">関西弁</button>
+                        <button type="button" class="preset-btn" data-method="敬語">敬語</button>
+                        <button type="button" class="preset-btn" data-method="カジュアル">カジュアル</button>
+                        <button type="button" class="preset-btn" data-method="ビジネス調">ビジネス調</button>
+                        <button type="button" class="preset-btn" data-method="子供向け">子供向け</button>
+                        <button type="button" class="preset-btn" data-method="英語風">英語風</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="methodInput">
+                        <i class="fas fa-cog"></i> 変換方式
+                    </label>
+                    <input 
+                        type="text" 
+                        id="methodInput" 
+                        class="input-field"
+                        placeholder="例: 怒った感じで、3歳児でも分かるように、Shakespeare風に..."
+                        required
+                        style="min-height: 50px;"
+                    />
+                </div>
+
+                <button type="submit" class="convert-btn" id="convertBtn">
+                    <i class="fas fa-magic"></i> 変換開始
+                </button>
+            </form>
+        </main>
+
+        <section class="result-section" id="resultSection">
+            <div class="result-header">
+                <h3><i class="fas fa-check-circle"></i> 変換結果</h3>
+                <button class="copy-btn" id="copyBtn">
+                    <i class="fas fa-copy"></i> コピー
+                </button>
+            </div>
+            <div class="result-content" id="resultContent"></div>
+        </section>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="./js/constants.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/app.js"></script>
+    
+    <script>
+        // DOM要素
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        const methodInput = document.getElementById('methodInput');
+
+        // プリセットボタンの処理（HTMLレベルの機能のみ）
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                methodInput.value = btn.dataset.method;
+            });
+        });
+    </script>
+</body>
+</html>
