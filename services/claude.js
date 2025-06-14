@@ -42,8 +42,8 @@ async function callClaudeAPI(content, method) {
         if (!result) {
             throw new Error('Claude APIから有効な応答が得られませんでした');
         }
-        
-        return result;
+        // モデル名を結果の最後に追加
+        return result + `\n\n---\n実行モデル: ${config.apis.claude.model}`;
         
     } catch (error) {
         console.error('Claude API呼び出しエラー:', error.response?.data || error.message);

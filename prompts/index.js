@@ -43,13 +43,7 @@ function buildClaudePrompts(content, method) {
  * Gemini用プロンプト構築
  */
 function buildGeminiPrompt(content, method) {
-    const systemInstruction = `あなたは高品質な文書変換スペシャリストです。指定された変換方式で、元の意味と情報を正確に保ちながら自然で読みやすい変換を行ってください。
-
-重要な注意事項:
-- 元の文書の意味と情報を正確に保持してください
-- 自然で読みやすい文章にしてください
-- 変換結果のみを出力し、説明や前置きは不要です
-- 元の文書に含まれていない情報は追加しないでください`;
+    const systemInstruction = `あなたは高品質な文書変換スペシャリストです。指定された変換方式で、元の意味と情報を正確に保ちながら自然で読みやすい変換を行ってください。`;
     
     let taskPrompt;
     
@@ -92,13 +86,7 @@ ${content}`;
  * OpenAI (ChatGPT) 用プロンプト構築
  */
 function buildOpenAIPrompts(content, method) {
-    const systemPrompt = `あなたは高品質な文書変換スペシャリストです。指定された変換方式で、元の意味と情報を正確に保ちながら自然で読みやすい変換を行ってください。
-
-重要な指示:
-- 元の文書の意味と情報を正確に保持してください
-- 自然で読みやすい文章にしてください
-- 変換結果のみを出力し、説明や前置きは不要です
-- 元の文書に含まれていない情報は追加しないでください`;
+    const systemPrompt = `あなたは高品質な文書変換スペシャリストです。指定された変換方式で、元の意味と情報を正確に保ちながら自然で読みやすい変換を行ってください。`;
     
     let userPrompt;
     

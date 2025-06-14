@@ -58,7 +58,8 @@ async function callOpenAIAPI(content, method) {
             throw new Error('OpenAI APIから有効な応答が得られませんでした');
         }
         
-        return result;
+        // モデル名を結果の最後に追加
+        return result + `\n\n---\n実行モデル: ${config.apis.openai.model}`;
         
     } catch (error) {
         console.error('OpenAI API呼び出しエラー:', error.response?.data || error.message);
