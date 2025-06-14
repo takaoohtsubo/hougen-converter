@@ -16,9 +16,6 @@ AIを活用した日本語表現変換ツール。Claude、Gemini、ChatGPTの3�
 - **セキュリティ**: レート制限、入力検証、セキュリティヘッダー完備
 - **クラウドネイティブ**: Google Cloud Run対応のコンテナ化アプリケーション
 
-## 🚀 デモ
-
-[ライブデモ（Gemini単体）](https://storage.googleapis.com/hougen/index.html)
 
 ## 📋 目次
 
@@ -390,4 +387,3 @@ npm run test:coverage
 **Made with ❤️ for the AI community**
 
 [![Deploy to Cloud Run](https://img.shields.io/badge/Deploy%20to-Cloud%20Run-blue.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/takaoohtsubo/hougen-converter)
-[![Try it now](https://img.shields.io/badge/Try-Live%20Demo-green.svg)](https://storage.googleapis.com/hougen/index.html)
